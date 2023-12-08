@@ -37,7 +37,7 @@ class UserControllerTest {
 
 
     @Test
-    public void testFindById_shouldReturnResponseOk() {
+    public void testUserFindById_shouldReturnResponseOk() {
         // given
         long userId = 1L;
         User mockUser = User.builder()
@@ -64,7 +64,7 @@ class UserControllerTest {
     }
 
     @Test
-    public void findById_shouldReturnResponseNotFoundCode() {
+    public void testUserFindById_shouldReturnResponseNotFoundCode() {
         // given
         long userId = 2L;
         UserDto mockUserDto = new UserDto();
@@ -81,14 +81,16 @@ class UserControllerTest {
     }
 
     @Test
-    void findById_InvalidId_shouldReturnBadRequest() {
+    void testUserFindById_InvalidId_shouldReturnBadRequest() {
+        // given // when
         ResponseEntity<?> response = userController.findById("nonNumericId");
+        // then
         assertEquals(400, response.getStatusCodeValue());
     }
 
 
     @Test
-    void save_ValidId_UserDeletedSuccessfully() {
+    void testUserSave_ValidId_UserDeletedSuccessfully() {
         // given
         long userId = 1L;
         User user = User.builder()
@@ -104,7 +106,7 @@ class UserControllerTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        when(userService.findById(Long.valueOf(userId))).thenReturn(user);
+        when(userService.findById(userId)).thenReturn(user);
 
         // when
         ResponseEntity<?> response = userController.save(String.valueOf(userId));
@@ -146,7 +148,7 @@ class UserControllerTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        when(userService.findById(Long.valueOf(userId))).thenReturn(user);
+        when(userService.findById(userId)).thenReturn(user);
 
         // when
         ResponseEntity<?> response = userController.save(String.valueOf(userId));
