@@ -11,6 +11,7 @@ import { expect } from '@jest/globals';
 import { SessionService } from 'src/app/services/session.service';
 
 import { LoginComponent } from './login.component';
+import { timeout } from 'rxjs';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -36,7 +37,17 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should verify input password type', () => {
+    const imputPassword = fixture.debugElement.nativeElement.querySelector('[data-testId="password_for_login"]');
+    expect(imputPassword.type).toBe("password");
   });
+
+  it('should verify submit metode when click', ()  => {
+    const submitSpy = jest.spyOn(component, 'submit');
+    const submitButton = fixture.debugElement.nativeElement.querySelector('[data-testId="submit_for_login"]');
+    submitButton.click();
+    setTimeout(() => { 
+    expect(submitSpy).toHaveBeenCalled(); }, 1000);
+  });
+
 });
