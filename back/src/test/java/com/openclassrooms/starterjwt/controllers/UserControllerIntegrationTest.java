@@ -78,14 +78,4 @@ class UserControllerIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
-    /*@Test
-    @WithMockUser(username = "yoga@studio.com", roles = "ADMIN")
-    void deleteById_AuthorizedUser_ReturnsOk() throws Exception {
-        long userId = 1L;
-
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/{id}", userId))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }*/
-
-//testUser password yoga@studio.com Admin $2a$10$.Hsa/ZjUVaHqi0tp9xieMeewrnZxrZ5pQRzddUXE/WjDu2ZThe6Iq
 }

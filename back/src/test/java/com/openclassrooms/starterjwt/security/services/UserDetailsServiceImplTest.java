@@ -10,6 +10,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
@@ -56,6 +58,41 @@ class UserDetailsServiceImplTest {
         // when // then
         assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(user.getEmail()));
 
+    }
+
+    @Test
+    void loadUserByUsername_UserFound_ReturnsUserDetails() {
+        // given
+        String username = "testuser";
+        User user = new User();
+        user.setId(1L);
+        user.setEmail("mario@example.com");
+        user.setFirstName("Mario");
+        user.setLastName("Rossi");
+        user.setPassword("password");
+
+        when(userRepository.findByEmail(username)).thenReturn(Optional.of(user));
+
+        // when
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        // then
+        assertNotNull(userDetails);
+        assertEquals(user.getEmail(), userDetails.getUsername());
+        assertEquals(user.getPassword(), userDetails.getPassword());
+
+    }
+
+    @Test
+    void loadUserByUsername_UserNotFound_ThrowsException() {
+        // given
+        String username = "nonexistentuser";
+
+        // Configura il comportamento del repository mock quando viene chiamato findByEmail
+        when(userRepository.findByEmail(username)).thenReturn(Optional.empty());
+
+        // when/then
+        assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(username));
     }
 
 }
