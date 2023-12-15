@@ -1,6 +1,5 @@
 package com.openclassrooms.starterjwt.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.starterjwt.models.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,7 @@ class UserControllerIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+
 
     @Test
     @WithMockUser
@@ -28,11 +26,12 @@ class UserControllerIntegrationTest {
         // given
         long userId = 1L;
 
-        // when // then
+        // when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/{id}", userId))
                 .andExpect(MockMvcResultMatchers
                         .status()
                         .isOk())
+                // then
                 .andExpect(MockMvcResultMatchers
                         .content()
                         .contentType(MediaType.APPLICATION_JSON));
@@ -41,30 +40,37 @@ class UserControllerIntegrationTest {
     @Test
     @WithMockUser
     void findById_InvalidId_ReturnsBadRequest() throws Exception {
+        // given
         String invalidUserId = "nonNumericId";
-
+        // when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/{id}", invalidUserId))
                 .andExpect(MockMvcResultMatchers
                         .status()
                         .isBadRequest())
+                // then
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
     @WithMockUser
     void findById_InvalidId_ReturnsNotFound() throws Exception {
+        // given
         User user = null;
+        // when
         mockMvc.perform(MockMvcRequestBuilders.get("/api/user/{id}", user))
                 .andExpect(MockMvcResultMatchers
                         .status()
                         .isNotFound())
+                // then
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     void deleteById_ValidIdAndUnauthorizedUser_ReturnsUnauthorized() throws Exception {
-        long userId = 1L;
+        // given // when
 
+        long userId = 1L;
+        // then
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/{id}", userId))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
@@ -72,10 +78,10 @@ class UserControllerIntegrationTest {
     @Test
     @WithMockUser(username = "testUser", password = "password", roles = "USER")
     void deleteById_shouldReturnUnauthorized() throws Exception {
+        // given // when
         long userId = 1L;
-
+        // then
         mockMvc.perform(MockMvcRequestBuilders.delete("/api/user/{id}", userId))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
-
 }

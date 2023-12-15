@@ -64,7 +64,7 @@ class JwtUtilsTest {
 
     @Test
     void validateJwtToken_ValidToken_ReturnsTrue() {
-        // Given
+        // given
         String validToken = Jwts.builder()
                 .setSubject("testuser")
                 .setIssuedAt(new Date())
@@ -72,75 +72,75 @@ class JwtUtilsTest {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
 
-        // When
+        // when
         boolean isValid = jwtUtils.validateJwtToken(validToken);
 
-        // Then
+        // then
         assertTrue(isValid);
     }
 
     @Test
     void validateJwtToken_InvalidSignature() {
-        // Given
+        // given
         String invalidSignatureToken = generateValidToken() + "tampered";
 
-        // When
+        // when
         boolean isValid = jwtUtils.validateJwtToken(invalidSignatureToken);
 
-        // Then
+        // then
         assertFalse(isValid);
     }
 
     @Test
     void validateJwtToken_InvalidToken() {
-        // Given
+        // given
         String invalidToken = "invalidToken";
 
-        // When
+        // when
         boolean isValid = jwtUtils.validateJwtToken(invalidToken);
 
-        // Then
+        // then
         assertFalse(isValid);
     }
 
     @Test
     void validateJwtToken_ExpiredToken() {
-        // Given
+        // given
         String expiredToken = generateExpiredToken();
 
-        // When
+        // when
         boolean isValid = jwtUtils.validateJwtToken(expiredToken);
 
-        // Then
+        // then
         assertFalse(isValid);
 
     }
 
     @Test
     void validateJwtToken_UnsupportedToken() {
-        // Given
+        // given
         String unsupportedToken = generateUnsupportedToken();
 
-        // When
+        // when
         boolean isValid = jwtUtils.validateJwtToken(unsupportedToken);
 
-        // Then
+        // then
         assertFalse(isValid);
 
     }
 
     @Test
     void validateJwtToken_EmptyClaims() {
-        // Given
+        // given
         String emptyClaimsToken = Jwts.builder()
                 .setSubject("testuser")
                 .signWith(SignatureAlgorithm.HS512, "your_secret_key")
                 .compact();
 
-        // When
+        // when
         boolean isValid = jwtUtils.validateJwtToken(emptyClaimsToken);
 
-        // Then
+        // then
         assertFalse(isValid);
     }
 

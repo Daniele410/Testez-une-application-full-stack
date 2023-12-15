@@ -86,10 +86,10 @@ class AuthControllerTest {
         when(userRepository.existsByEmail("test@example.com")).thenReturn(false);
         when(passwordEncoder.encode(signupRequest.getPassword())).thenReturn("encodedPassword");
 
-        // Test
+        // when
         ResponseEntity<?> responseEntity = authController.registerUser(signupRequest);
 
-        // Assertions
+        // then
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertTrue(responseEntity.getBody() instanceof MessageResponse);
 
@@ -99,7 +99,7 @@ class AuthControllerTest {
 
     @Test
     void testAuthenticateUser_UserIsNull() {
-        // Setup
+        // given
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("nonexistent@example.com");
         loginRequest.setPassword("password");
@@ -112,10 +112,10 @@ class AuthControllerTest {
 
         when(userRepository.findByEmail("nonexistent@example.com")).thenReturn(Optional.empty());
 
-        // Test
+        // when
         ResponseEntity<?> responseEntity = authController.authenticateUser(loginRequest);
 
-        // Assertions
+        // then
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertTrue(responseEntity.getBody() instanceof JwtResponse);
 

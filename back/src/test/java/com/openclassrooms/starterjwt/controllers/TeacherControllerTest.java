@@ -61,7 +61,6 @@ class TeacherControllerTest {
     void testFindTeacherById_findById_shouldReturnResponseNotFoundCode() {
         // given
         long teacherId = 2L;
-
         when(teacherService.findById(2L)).thenReturn(null);
 
         // when
@@ -100,8 +99,6 @@ class TeacherControllerTest {
         List<Teacher> teachers = new ArrayList<>();
         teachers.add(mockTeacher);
         teachers.add(mockTeacher2);
-
-
         when(teacherService.findAll()).thenReturn(teachers);
 
         // when

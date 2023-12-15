@@ -47,11 +47,9 @@ class UserControllerTest {
                 .password("password")
                 .email("mario@mail.com")
                 .build();
-
         UserDto mockUserDto = new UserDto();
         mockUserDto.setId(1L);
         mockUserDto.setFirstName("Mario");
-
         when(userService.findById(1L)).thenReturn(mockUser);
         when(userMapper.toDto(mockUser)).thenReturn(mockUserDto);
 
@@ -70,7 +68,6 @@ class UserControllerTest {
         UserDto mockUserDto = new UserDto();
         mockUserDto.setId(1L);
         mockUserDto.setFirstName("Mario");
-
         when(userService.findById(2L)).thenReturn(null);
 
         // when
@@ -100,12 +97,10 @@ class UserControllerTest {
                 .password("password")
                 .email("mario@mail.com")
                 .build();
-
         when(userDetails.getUsername()).thenReturn("mario@mail.com");
         when(authentication.getPrincipal()).thenReturn(userDetails);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-
         when(userService.findById(userId)).thenReturn(user);
 
         // when
@@ -113,7 +108,6 @@ class UserControllerTest {
 
         // then
         assertEquals(200, response.getStatusCodeValue());
-
     }
 
     @Test
@@ -128,7 +122,6 @@ class UserControllerTest {
 
         // then
         assertEquals(404, response.getStatusCodeValue());
-
     }
 
     @Test
@@ -142,12 +135,10 @@ class UserControllerTest {
                 .password("password")
                 .email("mario@mail.com")
                 .build();
-
         when(userDetails.getUsername()).thenReturn("test@mail.com");
         when(authentication.getPrincipal()).thenReturn(userDetails);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-
         when(userService.findById(userId)).thenReturn(user);
 
         // when
@@ -155,7 +146,6 @@ class UserControllerTest {
 
         // then
         assertEquals(401, response.getStatusCodeValue());
-
     }
 
     @Test
@@ -168,6 +158,5 @@ class UserControllerTest {
 
         // then
         assertEquals(400, response.getStatusCodeValue());
-
     }
 }

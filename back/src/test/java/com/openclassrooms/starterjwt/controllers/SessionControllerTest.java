@@ -69,13 +69,6 @@ class SessionControllerTest {
     public void testSessionFindById_shouldReturnResponseNotFoundCode() {
         // given
         long sessionId = 2L;
-        Session mockSession = Session.builder()
-                .id(1L)
-                .name("Mario")
-                .date(new Date("2021/01/01"))
-                .description("mySession")
-                .teacher(Teacher.builder().id(1L).build())
-                .build();
 
         SessionDto mockSessionDto = new SessionDto();
         mockSessionDto.setId(1L);
@@ -105,7 +98,6 @@ class SessionControllerTest {
     @Test
     public void testSessionGetAllSession_shouldReturnResponseOk() {
         // given
-        long sessionId = 2L;
         Session mockSession = Session.builder()
                 .id(1L)
                 .name("Mario")

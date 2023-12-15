@@ -3,36 +3,45 @@ package com.openclassrooms.starterjwt.mapper;
 import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.models.Teacher;
-import com.openclassrooms.starterjwt.models.User;
-import com.openclassrooms.starterjwt.services.TeacherService;
-import com.openclassrooms.starterjwt.services.UserService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
+@ExtendWith(MockitoExtension.class)
 class SessionMapperImplTest {
     @InjectMocks
     private SessionMapperImpl sessionMapper = new SessionMapperImpl();
 
-    @Mock
-    private TeacherService teacherService;
-
-    @Mock
-    private UserService userService;
-
     @Test
     void toEntity_WithNullDto_ReturnsNull() {
         // given // when
+        Session result = sessionMapper.toEntity((SessionDto) null);
+
+        // then
+        assertNull(result);
+    }
+
+    @Test
+    void toEntityList_WithNullListDto_ReturnsNull() {
+        // given // when
         List<Session> result = sessionMapper.toEntity((List<SessionDto>) null);
+
+        // then
+        assertNull(result);
+    }
+
+
+    @Test
+    void toDtoList_WithNullEntityList_ReturnsNull() {
+        // given // when
+        List<SessionDto> result = sessionMapper.toDto((List<Session>) null);
 
         // then
         assertNull(result);
@@ -41,10 +50,29 @@ class SessionMapperImplTest {
     @Test
     void toDto_WithNullEntity_ReturnsNull() {
         // given // when
-        List<SessionDto> result = sessionMapper.toDto((List<Session>) null);
+        SessionDto result = sessionMapper.toDto((Session) null);
 
         // then
         assertNull(result);
+    }
+
+    @Test
+    void toEntity_WithValidDto_ReturnsCorrectEntity() {
+        // Given
+        SessionDto sessionDto = createSessionDto(1L, "Test Session");
+
+        // When
+        Session result = sessionMapper.toEntity(sessionDto);
+
+        // Then
+        assertNotNull(result);
+        assertEquals(sessionDto.getId(), result.getId());
+        assertEquals(sessionDto.getDescription(), result.getDescription());
+        assertEquals(sessionDto.getName(), result.getName());
+        assertEquals(sessionDto.getDate(), result.getDate());
+        assertEquals(sessionDto.getCreatedAt(), result.getCreatedAt());
+        assertEquals(sessionDto.getUpdatedAt(), result.getUpdatedAt());
+
     }
 
     @Test
@@ -56,44 +84,89 @@ class SessionMapperImplTest {
         dtoList.add(sessionDto1);
         dtoList.add(sessionDto2);
 
-        // Mocking external dependencies
-        when(teacherService.findById(anyLong())).thenReturn(createMockTeacher());
-        when(userService.findById(anyLong())).thenReturn(createMockUser());
-
-        // When
+        // when
         List<Session> entityList = sessionMapper.toEntity(dtoList);
 
-        // Then
+        // then
         assertEquals(dtoList.size(), entityList.size());
         assertEquals(sessionDto1.getId(), entityList.get(0).getId());
         assertEquals(sessionDto1.getName(), entityList.get(0).getName());
-        // Add more assertions for other fields
-        verify(teacherService, times(2)).findById(anyLong());
-        verify(userService, times(2)).findById(anyLong());
     }
 
     @Test
     void toDtoList_WithValidEntityList_ReturnsCorrectDtoList() {
-        // Given
+        // given
         Session session1 = createSession(1L, "Session 1");
         Session session2 = createSession(2L, "Session 2");
         List<Session> entityList = Arrays.asList(session1, session2);
 
-        // When
+        // when
         List<SessionDto> dtoList = sessionMapper.toDto(entityList);
 
-        // Then
+        // then
         assertEquals(entityList.size(), dtoList.size());
         assertEquals(session1.getId(), dtoList.get(0).getId());
         assertEquals(session1.getName(), dtoList.get(0).getName());
-        // Add more assertions for other fields
+    }
+
+    @Test
+    void testToDto_WithValidSession_ReturnsCorrectDto() {
+        // given
+        SessionMapperImpl sessionMapper = new SessionMapperImpl();
+        Teacher teacherWithId = Teacher.builder().id(42L).build();
+        Session session = Session.builder()
+                .id(1L)
+                .name("Test Session")
+                .description("Test Description")
+                .teacher(teacherWithId)
+                .build();
+
+        // when
+        SessionDto sessionDto = sessionMapper.toDto(session);
+
+        // then
+        assertEquals(session.getId(), sessionDto.getId());
+        assertEquals(session.getName(), sessionDto.getName());
+        assertEquals(session.getDescription(), sessionDto.getDescription());
+        assertEquals(42L, sessionDto.getTeacher_id());
+    }
+
+    @Test
+    void testToDto_WithSessionWithoutTeacher_ReturnsDtoWithNullTeacherId() {
+        // given
+
+        Session sessionWithoutTeacher = Session.builder()
+                .id(1L)
+                .name("Test Session")
+                .description("Test Description")
+                .build();
+
+        // when
+        SessionDto sessionDto = sessionMapper.toDto(sessionWithoutTeacher);
+
+        // then
+        assertEquals(sessionWithoutTeacher.getId(), sessionDto.getId());
+        assertEquals(sessionWithoutTeacher.getName(), sessionDto.getName());
+        assertEquals(sessionWithoutTeacher.getDescription(), sessionDto.getDescription());
+        assertNull(sessionDto.getTeacher_id());
+    }
+
+    @Test
+    void testToDto_WithNullSession_ReturnsNullDto() {
+        // given
+        SessionMapperImpl sessionMapper = new SessionMapperImpl();
+
+        // when
+        SessionDto sessionDto = sessionMapper.toDto((Session) null);
+
+        // then
+        assertNull(sessionDto);
     }
 
     private SessionDto createSessionDto(Long id, String name) {
         SessionDto sessionDto = new SessionDto();
         sessionDto.setId(id);
         sessionDto.setName(name);
-        // Set other fields as needed
         return sessionDto;
     }
 
@@ -101,30 +174,7 @@ class SessionMapperImplTest {
         Session.SessionBuilder sessionBuilder = Session.builder();
         sessionBuilder.id(id);
         sessionBuilder.name(name);
-        // Set other fields as needed
         return sessionBuilder.build();
     }
 
-    private Teacher createMockTeacher() {
-
-        return Teacher.builder()
-                .id(1L)
-                .lastName("Doe")
-                .firstName("John")
-                .createdAt(null)
-                .updatedAt(null)
-                .build();
-    }
-
-    private User createMockUser() {
-        return User.builder()
-                .id(1L)
-                .firstName("John")
-                .lastName("Doe")
-                .password("password")
-                .email("email@mail.com")
-                .createdAt(null)
-                .updatedAt(null)
-                .build();
-    }
 }

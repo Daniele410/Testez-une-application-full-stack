@@ -106,6 +106,7 @@
 						<!-- Escludi i DTO -->
 						<exclude>com/openclassrooms/starterjwt/dto/**</exclude>
 						<exclude>com/openclassrooms/starterjwt/models/**</exclude>
+						<exclude>com/openclassrooms/starterjwt/payload/request/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
