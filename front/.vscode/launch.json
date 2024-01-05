@@ -27,6 +27,25 @@
         },
         {
             "type": "node",
+            "name": "vscode-jest-tests.v2-1703253002941",
+            "request": "launch",
+            "args": [
+                "test",
+                "--runInBand",
+                "--watchAll=false",
+                "--testNamePattern",
+                "${jest.testNamePattern}",
+                "--runTestsByPath",
+                "${jest.testFile}"
+            ],
+            "cwd": "c:\\WorkSpaceBackEnd\\Testez-une-application-full-stack\\front",
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "disableOptimisticBPs": true,
+            "runtimeExecutable": "yarn"
+        },
+        {
+            "type": "node",
             "name": "vscode-jest-tests.v2",
             "request": "launch",
             "args": [
