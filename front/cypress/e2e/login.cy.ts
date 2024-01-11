@@ -12,6 +12,8 @@ describe('Login spec', () => {
       },
     })
 
+    cy.get('mat-card-title').should('have.text', 'Login');
+
     cy.intercept(
       {
         method: 'GET',
@@ -23,5 +25,9 @@ describe('Login spec', () => {
     cy.get('input[formControlName=password]').type(`${"test!1234"}{enter}{enter}`)
 
     cy.url().should('include', '/sessions')
+
+    cy.get('mat-card-title').should('be.visible')
+
+    cy.get('mat-card-title').should('have.text', 'Rentals available');
   })
 });
