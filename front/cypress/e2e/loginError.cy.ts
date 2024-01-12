@@ -1,3 +1,4 @@
+// Remove the import statement for 'cy' from the 'cypress' module
 describe('Login spec', () => {
   it('Login successfull', () => {
     cy.visit('/login')
@@ -16,7 +17,6 @@ describe('Login spec', () => {
 
     cy.get('mat-card-title').should('be.visible')
 
-    
   })
 
 });

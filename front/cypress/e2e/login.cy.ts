@@ -29,5 +29,10 @@ describe('Login spec', () => {
     cy.get('mat-card-title').should('be.visible')
 
     cy.get('mat-card-title').should('have.text', 'Rentals available');
+
   })
+
+
+
+
 });
