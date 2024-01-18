@@ -11,11 +11,17 @@ import { expect } from '@jest/globals';
 import { SessionService } from 'src/app/services/session.service';
 
 import { LoginComponent } from './login.component';
-import { timeout } from 'rxjs';
+import { jest } from '@jest/globals';
+import { of, throwError } from 'rxjs';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
+import { SessionInformation } from 'src/app/interfaces/sessionInformation.interface';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let router: Router;
+  let sessionService: SessionService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -35,6 +41,8 @@ describe('LoginComponent', () => {
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    router = TestBed.inject(Router);
+    sessionService = TestBed.inject(SessionService);
   });
 
   it('should verify input password type', () => {
@@ -48,6 +56,34 @@ describe('LoginComponent', () => {
     submitButton.click();
     setTimeout(() => { 
     expect(submitSpy).toHaveBeenCalled(); }, 1000);
+  });
+
+  it('should submit login request and navigate on successful login', () => {
+    const authService = TestBed.inject(AuthService);
+
+    const navigateSpy = jest
+      .spyOn(router, 'navigate')
+      .mockImplementation(async () => true);
+
+    const authSpy = jest
+      .spyOn(authService, 'login')
+      .mockImplementation(() => of({} as SessionInformation));
+
+    jest.spyOn(sessionService, 'logIn').mockImplementation(() => {});
+    component.submit();
+    expect(authSpy).toHaveBeenCalled();
+    expect(navigateSpy).toHaveBeenCalledWith(['/sessions']);
+  });
+
+  it('should handle error on login', () => {
+    const authService = TestBed.inject(AuthService);
+    const loginSpy = jest
+      .spyOn(authService, 'login')
+      .mockImplementation(() => throwError(() => new Error('err')));
+
+    component.submit();
+    expect(loginSpy).toHaveBeenCalled();
+    expect(component.onError).toBe(true);
   });
 
 });
