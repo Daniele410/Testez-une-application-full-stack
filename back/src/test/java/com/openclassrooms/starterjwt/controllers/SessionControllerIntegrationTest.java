@@ -530,5 +530,4 @@ public class SessionControllerIntegrationTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
-
 }
