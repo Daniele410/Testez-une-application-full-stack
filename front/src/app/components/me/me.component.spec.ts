@@ -12,7 +12,9 @@ import { MeComponent } from './me.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserService } from 'src/app/services/user.service';
+import { jest } from '@jest/globals';
 import { of } from 'rxjs';
+import { expect } from '@jest/globals';
 
 describe('MeComponent', () => {
   let component: MeComponent;

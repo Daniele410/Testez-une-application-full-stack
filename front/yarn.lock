@@ -3934,7 +3934,7 @@ cssstyle@^2.3.0:
   dependencies:
     cssom "~0.3.6"
 
-cypress@*, cypress@^10.4.0:
+cypress@*, cypress@^10.11.0:
   version "10.11.0"
   resolved "https://registry.npmjs.org/cypress/-/cypress-10.11.0.tgz"
   integrity sha512-lsaE7dprw5DoXM00skni6W5ElVVLGAdRUUdZjX2dYsGjbY/QnpzWZ95Zom1mkGg0hAaO/QVTZoFVS7Jgr/GUPA==
